@@ -14,6 +14,7 @@ public class Estacionamento {
     }
 
     private void expandirVetor() {
+
         Carro[] novoVetor = new Carro[carros.length + 1];
 
         for (int i = 0; i < carros.length; i++) {
@@ -36,6 +37,7 @@ public class Estacionamento {
         }
 
         for (int i = 0; i < carros.length; i++) {
+
             if (carros[i].getPlaca().equalsIgnoreCase(placa)) {
                 return false;
             }
@@ -44,16 +46,18 @@ public class Estacionamento {
         expandirVetor();
 
         Carro carro = new Carro(placa, modelo, proprietario, horaEntrada);
+
         carros[carros.length - 1] = carro;
 
         return true;
     }
 
-    public boolean removerCarro(String placa, int horaSaida) {
+    public double removerCarro(String placa, int horaSaida) {
 
         int posicao = -1;
 
         for (int i = 0; i < carros.length; i++) {
+
             if (carros[i].getPlaca().equalsIgnoreCase(placa)) {
                 posicao = i;
                 break;
@@ -61,7 +65,12 @@ public class Estacionamento {
         }
 
         if (posicao == -1) {
-            return false;
+            return -1.0;
+        }
+
+        if (horaSaida < 0 || horaSaida > 23) {
+            System.out.println("Hora de saida invalida!");
+            return -1.0;
         }
 
         int horas = horaSaida - carros[posicao].getHoraEntrada();
@@ -69,7 +78,7 @@ public class Estacionamento {
         if (horas <= 0) {
             System.out.println("Nao e possivel!");
             System.out.println("Informe uma hora maior que a hora de entrada.");
-            return false;
+            return -1.0;
         }
 
         double valor = calcularValor(horas);
@@ -77,11 +86,11 @@ public class Estacionamento {
         arrecadacao = arrecadacao + valor;
 
         System.out.println("Tempo estacionado: " + horas + " hora(s)");
-        System.out.println("Valor a pagar: R$ " + valor);
 
         Carro[] novoVetor = new Carro[carros.length - 1];
 
         for (int i = 0; i < novoVetor.length; i++) {
+
             if (i < posicao) {
                 novoVetor[i] = carros[i];
             } else {
@@ -91,7 +100,7 @@ public class Estacionamento {
 
         carros = novoVetor;
 
-        return true;
+        return valor;
     }
 
     private double calcularValor(int horas) {
@@ -107,6 +116,7 @@ public class Estacionamento {
 
         if (carros.length == 0) {
             System.out.println("Estacionamento vazio.");
+            return;
         }
 
         for (int i = 0; i < carros.length; i++) {
@@ -115,6 +125,7 @@ public class Estacionamento {
             System.out.println("Modelo: " + carros[i].getModelo());
             System.out.println("Proprietario: " + carros[i].getProprietario());
             System.out.println("Hora de entrada: " + carros[i].getHoraEntrada());
+
             System.out.println("-------------------------");
         }
     }
@@ -139,5 +150,9 @@ public class Estacionamento {
 
     public double getArrecadacao() {
         return arrecadacao;
+    }
+
+    public Carro[] getCarros() {
+        return carros;
     }
 }
